@@ -9,18 +9,24 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.prafull.notesapp.auth.ui.AuthScreen
+import com.prafull.notesapp.auth.ui.AuthViewModel
 import com.prafull.notesapp.auth.ui.LoginScreen
 import com.prafull.notesapp.auth.ui.SignUpScreen
+import com.prafull.notesapp.main.ui.screens.CreateNote
+import com.prafull.notesapp.main.ui.screens.EditNoteScreen
 import com.prafull.notesapp.main.ui.screens.HomeScreen
 import com.prafull.notesapp.main.ui.theme.NotesAppTheme
 import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,6 +35,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             NotesAppTheme {
                 val mainNavController = rememberNavController()
+                val pref = getSharedPreferences("notes_pref", MODE_PRIVATE)
                 Scaffold(
                     Modifier
                         .imePadding()
@@ -37,7 +44,11 @@ class MainActivity : ComponentActivity() {
                     NavHost(
                         modifier = Modifier.padding(innerPadding),
                         navController = mainNavController,
-                        startDestination = MajorRoutes.AuthScreen
+                        startDestination = if (pref.getBoolean(
+                                "isLoggedIn",
+                                false
+                            )
+                        ) MajorRoutes.HomeScreen else MajorRoutes.AuthScreen
                     ) {
                         homeNavigation(mainNavController)
                         authNavigation(mainNavController)
@@ -51,7 +62,19 @@ class MainActivity : ComponentActivity() {
 fun NavGraphBuilder.homeNavigation(navController: NavController) {
     navigation<MajorRoutes.HomeScreen>(startDestination = HomeRoutes.HomeScreen) {
         composable<HomeRoutes.HomeScreen> {
-            HomeScreen(navController)
+            HomeScreen(navController, getViewModel())
+        }
+        composable<HomeRoutes.AddNoteScreen> {
+            CreateNote(viewModel = getViewModel(), navController = navController)
+        }
+        composable<HomeRoutes.EditNoteScreen> {
+            val noteItem = it.toRoute<HomeRoutes.EditNoteScreen>()
+
+            EditNoteScreen(
+                noteItem = noteItem.toNoteItem(),
+                navController = navController,
+                getViewModel()
+            )
         }
     }
 }
@@ -59,13 +82,27 @@ fun NavGraphBuilder.homeNavigation(navController: NavController) {
 fun NavGraphBuilder.authNavigation(navController: NavController) {
     navigation<MajorRoutes.AuthScreen>(startDestination = AuthRoutes.MainScreen) {
         composable<AuthRoutes.LoginScreen> {
-            LoginScreen(navController, getViewModel())
+            val viewModel: AuthViewModel = koinViewModel()
+            LoginScreen(navController, viewModel)
         }
         composable<AuthRoutes.RegisterScreen> {
-            SignUpScreen(navController)
+            val viewModel: AuthViewModel = koinViewModel()
+            SignUpScreen(navController, viewModel)
         }
         composable<AuthRoutes.MainScreen> {
             AuthScreen(navController)
         }
+    }
+}
+
+fun NavController.goBackStack() {
+    if (currentBackStackEntry?.lifecycle?.currentState == Lifecycle.State.RESUMED) {
+        popBackStack()
+    }
+}
+
+fun NavController.clearCompleteBackStack() {
+    while (currentBackStackEntry != null) {
+        popBackStack()
     }
 }
