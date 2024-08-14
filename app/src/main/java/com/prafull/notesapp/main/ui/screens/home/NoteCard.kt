@@ -1,4 +1,4 @@
-package com.prafull.notesapp.main.ui.screens
+package com.prafull.notesapp.main.ui.screens.home
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -31,7 +31,7 @@ fun NoteCard(note: NoteItem, navController: NavController) {
         Column(modifier = Modifier
             .fillMaxSize()
             .clickable {
-                navController.navigate(note.toEditableNote())
+                // TODO: Navigate to EditNoteScreen
             }
             .padding(16.dp)) {
             Text(

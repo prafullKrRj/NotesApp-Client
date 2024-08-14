@@ -16,14 +16,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.toRoute
 import com.prafull.notesapp.auth.ui.AuthScreen
 import com.prafull.notesapp.auth.ui.AuthViewModel
 import com.prafull.notesapp.auth.ui.LoginScreen
 import com.prafull.notesapp.auth.ui.SignUpScreen
-import com.prafull.notesapp.main.ui.screens.CreateNote
-import com.prafull.notesapp.main.ui.screens.EditNoteScreen
-import com.prafull.notesapp.main.ui.screens.HomeScreen
+import com.prafull.notesapp.main.ui.screens.createNote.CreateNoteScreen
+import com.prafull.notesapp.main.ui.screens.home.HomeScreen
 import com.prafull.notesapp.main.ui.theme.NotesAppTheme
 import org.koin.androidx.compose.getViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -64,17 +62,8 @@ fun NavGraphBuilder.homeNavigation(navController: NavController) {
         composable<HomeRoutes.HomeScreen> {
             HomeScreen(navController, getViewModel())
         }
-        composable<HomeRoutes.AddNoteScreen> {
-            CreateNote(viewModel = getViewModel(), navController = navController)
-        }
-        composable<HomeRoutes.EditNoteScreen> {
-            val noteItem = it.toRoute<HomeRoutes.EditNoteScreen>()
-
-            EditNoteScreen(
-                noteItem = noteItem.toNoteItem(),
-                navController = navController,
-                getViewModel()
-            )
+        composable<HomeRoutes.NewNoteScreen> {
+            CreateNoteScreen(viewModel = getViewModel(), navController = navController)
         }
     }
 }

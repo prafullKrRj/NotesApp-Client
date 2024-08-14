@@ -1,4 +1,4 @@
-package com.prafull.notesapp.main.ui.screens
+package com.prafull.notesapp.main.ui.screens.home
 
 import android.content.Context
 import androidx.compose.runtime.getValue
@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.prafull.notesapp.main.domain.models.CreateNoteModel
+import com.prafull.notesapp.main.domain.models.CreateNoteItem
 import com.prafull.notesapp.main.domain.models.NoteItem
 import com.prafull.notesapp.main.domain.repos.NotesRepository
 import com.prafull.notesapp.managers.BaseClass
@@ -69,7 +69,7 @@ class HomeViewModel(
         }
     }
 
-    fun createNote(noteItem: CreateNoteModel) {
+    fun createNote(noteItem: CreateNoteItem) {
         viewModelScope.launch {
             repo.createNote("Bearer ${pref.getString("token", "")}", noteItem).collect { resp ->
                 _uiState.update {

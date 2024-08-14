@@ -1,4 +1,4 @@
-package com.prafull.notesapp.main.ui.screens
+package com.prafull.notesapp.main.ui.screens.home
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -47,7 +47,7 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel) {
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(onClick = {
-                navController.navigate(HomeRoutes.AddNoteScreen)
+                navController.navigate(HomeRoutes.NewNoteScreen)
             }) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = null)
             }
