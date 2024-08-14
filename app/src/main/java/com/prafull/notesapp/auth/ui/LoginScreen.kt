@@ -9,6 +9,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -36,6 +37,7 @@ fun LoginScreen(navController: NavController, viewModel: AuthViewModel) {
         if (viewModel.hasLoggedIn) {
             navController.clearCompleteBackStack()
             navController.navigate(MajorRoutes.HomeScreen)
+            viewModel.clicked = false
         }
     }
     Column(
@@ -46,6 +48,9 @@ fun LoginScreen(navController: NavController, viewModel: AuthViewModel) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = CenterHorizontally
     ) {
+        if (viewModel.clicked) {
+            CircularProgressIndicator()
+        }
         EmailAndPassword(
             email = email,
             password = password,
@@ -66,10 +71,12 @@ fun LoginScreen(navController: NavController, viewModel: AuthViewModel) {
                 passwordError = password.isBlank()
                 if (!emailError && !passwordError) {
                     viewModel.login(email, password)
+                    viewModel.clicked = true
                 }
             },
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(18.dp)
+            shape = RoundedCornerShape(18.dp),
+            enabled = !viewModel.clicked
         ) {
             Text("Login")
         }

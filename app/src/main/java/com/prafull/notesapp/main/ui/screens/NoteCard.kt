@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.prafull.notesapp.main.domain.models.NoteItem
+import com.prafull.notesapp.managers.markdownToPlainText
 
 @Composable
 fun NoteCard(note: NoteItem, navController: NavController) {
@@ -34,14 +35,14 @@ fun NoteCard(note: NoteItem, navController: NavController) {
             }
             .padding(16.dp)) {
             Text(
-                text = note.title,
+                text = markdownToPlainText(note.title),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.Black
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = note.content,
+                text = markdownToPlainText(note.content),
                 fontSize = 16.sp,
                 color = Color.DarkGray
             )

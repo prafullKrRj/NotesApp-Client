@@ -15,13 +15,13 @@ import org.koin.core.component.KoinComponent
 
 class AuthViewModel(
     private val apiService: AuthApiService,
-    context: Context
+    private val context: Context
 ) : ViewModel(), KoinComponent {
     private val prefs = context.getSharedPreferences("notes_pref", Context.MODE_PRIVATE)
+    var clicked by mutableStateOf(false)
     var hasLoggedIn by mutableStateOf(false)
     fun login(email: String, password: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            Log.d("AuthViewModel", "Logging in user ${"$email $password"}")
             val response = apiService.login(
                 User(email, password)
             )
@@ -32,7 +32,7 @@ class AuthViewModel(
                     prefs.edit().putBoolean("isLoggedIn", true).apply()
                 }
             } else {
-                Log.e("AuthViewModel", "Error: ${response.errorBody().toString()}")
+                Log.d("AuthViewModel", "Error occurred")
             }
         }
     }

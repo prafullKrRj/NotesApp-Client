@@ -31,3 +31,8 @@ data class NoteItem(
         )
     }
 }
+
+data class CreateNoteModel(
+    val title: String,
+    val content: String
+)

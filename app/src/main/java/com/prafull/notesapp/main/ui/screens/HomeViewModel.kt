@@ -1,8 +1,12 @@
 package com.prafull.notesapp.main.ui.screens
 
 import android.content.Context
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.prafull.notesapp.main.domain.models.CreateNoteModel
 import com.prafull.notesapp.main.domain.models.NoteItem
 import com.prafull.notesapp.main.domain.repos.NotesRepository
 import com.prafull.notesapp.managers.BaseClass
@@ -17,6 +21,9 @@ class HomeViewModel(
     private val repo: NotesRepository
 ) : ViewModel(), KoinComponent {
     private val pref = context.getSharedPreferences("notes_pref", Context.MODE_PRIVATE)
+
+    private var notes by mutableStateOf<List<NoteItem>>(emptyList())
+
     private val _uiState = MutableStateFlow<BaseClass<List<NoteItem>>>(BaseClass.Loading)
     val uiState = _uiState.asStateFlow()
 
@@ -25,13 +32,13 @@ class HomeViewModel(
     }
 
     fun filterNotes(query: String) {
-
         viewModelScope.launch {
-            val allNotes = (uiState.value as? BaseClass.Success<List<NoteItem>>)?.data ?: return@launch
-            val filteredNotes = allNotes.filter {
-                it.title.contains(query, ignoreCase = true) || it.content.contains(query, ignoreCase = true)
+            val filteredNotes = notes.filter {
+                it.title.contains(query, ignoreCase = true) || it.content.contains(
+                    query,
+                    ignoreCase = true
+                )
             }
-
             _uiState.update { BaseClass.Success(filteredNotes) }
         }
     }
@@ -41,6 +48,9 @@ class HomeViewModel(
             repo.getAllNotes("Bearer ${pref.getString("token", "")}").collect { resp ->
                 _uiState.update {
                     resp
+                }
+                if (resp is BaseClass.Success) {
+                    notes = resp.data
                 }
             }
         }
@@ -52,15 +62,21 @@ class HomeViewModel(
                 _uiState.update {
                     resp
                 }
+                if (resp is BaseClass.Success) {
+                    notes = resp.data
+                }
             }
         }
     }
 
-    fun createNote(noteItem: NoteItem) {
+    fun createNote(noteItem: CreateNoteModel) {
         viewModelScope.launch {
             repo.createNote("Bearer ${pref.getString("token", "")}", noteItem).collect { resp ->
                 _uiState.update {
                     resp
+                }
+                if (resp is BaseClass.Success) {
+                    notes = resp.data
                 }
             }
         }
@@ -71,6 +87,9 @@ class HomeViewModel(
             repo.updateNote("Bearer ${pref.getString("token", "")}", noteItem).collect { resp ->
                 _uiState.update {
                     resp
+                }
+                if (resp is BaseClass.Success) {
+                    notes = resp.data
                 }
             }
         }

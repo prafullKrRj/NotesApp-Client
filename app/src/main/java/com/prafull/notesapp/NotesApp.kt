@@ -19,6 +19,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class NotesApp : Application() {
     override fun onCreate() {
         super.onCreate()
+        val baseUrl = "https://notesapp-v4w2.onrender.com/"
         startKoin {
             androidContext(this@NotesApp)
             modules(
@@ -26,7 +27,7 @@ class NotesApp : Application() {
                     viewModel<AuthViewModel> { AuthViewModel(get(), get()) }
                     single<AuthApiService> {
                         Retrofit.Builder()
-                            .baseUrl("http://192.168.194.184:5000/")
+                            .baseUrl(baseUrl)
                             .addConverterFactory(
                                 GsonConverterFactory.create()
                             )
@@ -40,7 +41,7 @@ class NotesApp : Application() {
                         SharedPrefManager(get())
                     }
                     single<ApiService> {
-                        Retrofit.Builder().baseUrl("http://192.168.194.184:5000/")
+                        Retrofit.Builder().baseUrl(baseUrl)
                             .addConverterFactory(GsonConverterFactory.create()).build()
                             .create(ApiService::class.java)
                     }

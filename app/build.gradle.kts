@@ -82,4 +82,8 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
 
     implementation(libs.kotlinx.serialization.json)
+
+    implementation(libs.richeditor.compose)
+
+    implementation(libs.commonmark)
 }

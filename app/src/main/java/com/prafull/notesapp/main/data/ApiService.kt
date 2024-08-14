@@ -1,5 +1,6 @@
 package com.prafull.notesapp.main.data
 
+import com.prafull.notesapp.main.domain.models.CreateNoteModel
 import com.prafull.notesapp.main.domain.models.NoteItem
 import com.prafull.notesapp.main.domain.models.Notes
 import retrofit2.Response
@@ -19,7 +20,7 @@ interface ApiService {
     @POST("/api/notes/create")
     suspend fun createNote(
         @Header("Authorization") token: String,
-        @Body note: NoteItem
+        @Body note: CreateNoteModel
     ): Response<Notes>
 
     @POST("/api/notes/update")

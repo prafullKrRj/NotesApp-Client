@@ -1,7 +1,7 @@
 package com.prafull.notesapp.main.data
 
+import com.prafull.notesapp.main.domain.models.CreateNoteModel
 import com.prafull.notesapp.main.domain.models.NoteItem
-import com.prafull.notesapp.main.domain.models.Notes
 import com.prafull.notesapp.main.domain.repos.NotesRepository
 import com.prafull.notesapp.managers.BaseClass
 import kotlinx.coroutines.channels.awaitClose
@@ -29,7 +29,10 @@ class NotesRepositoryImpl(
         }
     }
 
-    override suspend fun deleteNote(token: String, noteId: String): Flow<BaseClass<List<NoteItem>>> {
+    override suspend fun deleteNote(
+        token: String,
+        noteId: String
+    ): Flow<BaseClass<List<NoteItem>>> {
         return callbackFlow {
             try {
                 val response = apiService.deleteNote(token, noteId)
@@ -47,7 +50,10 @@ class NotesRepositoryImpl(
         }
     }
 
-    override suspend fun createNote(token: String, note: NoteItem): Flow<BaseClass<List<NoteItem>>> {
+    override suspend fun createNote(
+        token: String,
+        note: CreateNoteModel
+    ): Flow<BaseClass<List<NoteItem>>> {
         return callbackFlow {
             try {
                 val response = apiService.createNote(token, note)
@@ -65,7 +71,10 @@ class NotesRepositoryImpl(
         }
     }
 
-    override suspend fun updateNote(token: String, note: NoteItem): Flow<BaseClass<List<NoteItem>>> {
+    override suspend fun updateNote(
+        token: String,
+        note: NoteItem
+    ): Flow<BaseClass<List<NoteItem>>> {
         return callbackFlow {
             try {
                 val response = apiService.updateNote(token, note)

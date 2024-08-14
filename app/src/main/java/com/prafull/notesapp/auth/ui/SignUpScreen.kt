@@ -10,6 +10,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,6 +41,7 @@ fun SignUpScreen(navController: NavController, viewModel: AuthViewModel) {
         if (viewModel.hasLoggedIn) {
             navController.clearCompleteBackStack()
             navController.navigate(MajorRoutes.HomeScreen)
+            viewModel.clicked = false
         }
     }
     Column(
@@ -50,6 +52,9 @@ fun SignUpScreen(navController: NavController, viewModel: AuthViewModel) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = CenterHorizontally
     ) {
+        if (viewModel.clicked) {
+            CircularProgressIndicator()
+        }
         EmailAndPassword(
             email = email,
             password = password,
@@ -87,11 +92,13 @@ fun SignUpScreen(navController: NavController, viewModel: AuthViewModel) {
                     viewModel.register(email, password, name)
                     if (viewModel.hasLoggedIn) {
                         navController.navigate(MajorRoutes.HomeScreen)
+                        viewModel.clicked = true
                     }
                 }
             },
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(18.dp)
+            shape = RoundedCornerShape(18.dp),
+            enabled = !viewModel.clicked
         ) {
             Text("Sign Up")
         }
