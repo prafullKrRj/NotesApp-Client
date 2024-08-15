@@ -17,9 +17,12 @@ import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 
 class HomeViewModel(
-    context: Context,
-    private val repo: NotesRepository
+    context: Context, private val repo: NotesRepository
 ) : ViewModel(), KoinComponent {
+
+    private val _selectedNotes = MutableStateFlow<Set<NoteItem>>(mutableSetOf())
+    val selectedNotes = _selectedNotes.asStateFlow()
+
     private val pref = context.getSharedPreferences("notes_pref", Context.MODE_PRIVATE)
 
     private var notes by mutableStateOf<List<NoteItem>>(emptyList())
@@ -31,12 +34,27 @@ class HomeViewModel(
         getAllNotes()
     }
 
+    fun toggleNote(note: NoteItem) {
+        if (_selectedNotes.value.contains(note)) {
+            _selectedNotes.update {
+                it.toMutableSet().apply {
+                    remove(note)
+                }
+            }
+            return
+        }
+        _selectedNotes.update {
+            it.toMutableSet().apply {
+                add(note)
+            }
+        }
+    }
+
     fun filterNotes(query: String) {
         viewModelScope.launch {
             val filteredNotes = notes.filter {
                 it.title.contains(query, ignoreCase = true) || it.content.contains(
-                    query,
-                    ignoreCase = true
+                    query, ignoreCase = true
                 )
             }
             _uiState.update { BaseClass.Success(filteredNotes) }
@@ -93,5 +111,22 @@ class HomeViewModel(
                 }
             }
         }
+    }
+
+    fun deleteSelectedNotes() {
+        _uiState.update {
+            BaseClass.Loading
+        }
+        viewModelScope.launch {
+            val selectedNotes = _selectedNotes.value
+            selectedNotes.forEach {
+                deleteNoteById(it._id)
+            }
+            _selectedNotes.update { emptySet() }
+        }
+    }
+
+    fun clearSelectedNotes() {
+        _selectedNotes.update { emptySet() }
     }
 }

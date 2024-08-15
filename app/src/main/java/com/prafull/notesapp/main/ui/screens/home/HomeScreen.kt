@@ -12,6 +12,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -26,6 +27,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,7 +45,11 @@ import com.prafull.notesapp.managers.BaseClass
 fun HomeScreen(navController: NavController, viewModel: HomeViewModel) {
     val state by viewModel.uiState.collectAsState()
     var searchQuery by rememberSaveable { mutableStateOf("") }
+    val selectedNotes by viewModel.selectedNotes.collectAsState()
 
+    LaunchedEffect(Unit) {
+        viewModel.getAllNotes()
+    }
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(onClick = {
@@ -53,11 +59,35 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel) {
             }
         },
         topBar = {
-            CenterAlignedTopAppBar(title = {
-                SearchBar(viewModel = viewModel, searchQuery = searchQuery) {
-                    searchQuery = it
-                }
-            })
+            if (selectedNotes.isNotEmpty()) {
+                CenterAlignedTopAppBar(title = {
+                    Text(text = "${selectedNotes.size} selected")
+                }, actions = {
+                    IconButton(onClick = {
+                        viewModel.deleteSelectedNotes()
+                    }) {
+                        Icon(
+                            imageVector = Icons.Filled.Delete,
+                            contentDescription = "Delete selected notes"
+                        )
+                    }
+                }, navigationIcon = {
+                    IconButton(onClick = {
+                        viewModel.clearSelectedNotes()
+                    }) {
+                        Icon(
+                            imageVector = Icons.Filled.Close,
+                            contentDescription = "Close selection"
+                        )
+                    }
+                })
+            } else {
+                CenterAlignedTopAppBar(title = {
+                    SearchBar(viewModel = viewModel, searchQuery = searchQuery) {
+                        searchQuery = it
+                    }
+                })
+            }
         }
     ) { paddingValues ->
         Column(Modifier.padding(paddingValues)) {
@@ -65,11 +95,18 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel) {
                 is BaseClass.Loading -> {
                     CircularProgressIndicator()
                 }
-
                 is BaseClass.Success -> {
                     LazyColumn(Modifier.fillMaxSize(), contentPadding = PaddingValues(12.dp)) {
                         items((state as BaseClass.Success<List<NoteItem>>).data) {
-                            NoteCard(note = it, navController)
+                            NoteCard(
+                                note = it,
+                                selected = selectedNotes.contains(it),
+                                onNoteToggled = {
+                                    viewModel.toggleNote(it)
+                                },
+                                navController = navController,
+                                isSelecting = selectedNotes.isNotEmpty()
+                            )
                         }
                     }
                 }
