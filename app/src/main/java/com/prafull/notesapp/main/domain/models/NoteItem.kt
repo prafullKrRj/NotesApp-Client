@@ -1,6 +1,7 @@
 package com.prafull.notesapp.main.domain.models
 
 import com.google.gson.annotations.SerializedName
+import com.prafull.notesapp.HomeRoutes
 
 data class NoteItem(
     @SerializedName("__v")
@@ -17,4 +18,6 @@ data class NoteItem(
     val updatedAt: String,
     @SerializedName("user")
     val user: String
-)
+) {
+    fun toEditNoteRoute() = HomeRoutes.EditNoteScreen(__v, _id, content, createdAt, title, updatedAt, user)
+}

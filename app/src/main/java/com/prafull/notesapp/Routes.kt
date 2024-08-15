@@ -1,5 +1,7 @@
 package com.prafull.notesapp
 
+import com.google.gson.annotations.SerializedName
+import com.prafull.notesapp.main.domain.models.NoteItem
 import kotlinx.serialization.Serializable
 
 sealed interface MajorRoutes {
@@ -27,4 +29,17 @@ sealed interface HomeRoutes {
 
     @Serializable
     data object NewNoteScreen : HomeRoutes
+
+    @Serializable
+    data class EditNoteScreen(
+        val __v: Int,
+        val _id: String,
+        val content: String,
+        val createdAt: String,
+        val title: String,
+        val updatedAt: String,
+        val user: String
+    ) : HomeRoutes {
+        fun toNoteItem() = NoteItem(__v, _id, content, createdAt, title, updatedAt, user)
+    }
 }

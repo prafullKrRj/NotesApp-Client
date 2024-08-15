@@ -107,7 +107,7 @@ fun CreateNoteScreen(viewModel: CreateNoteVM, navController: NavController) {
         )
 
         LazyRow(modifier = Modifier.fillMaxWidth()) {
-            items(StyleType.values()) { style ->
+            items(StyleType.entries.toTypedArray()) { style ->
                 EditableButton(
                     style = style,
                     onClick = {

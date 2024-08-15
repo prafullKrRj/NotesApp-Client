@@ -16,15 +16,19 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.prafull.notesapp.auth.ui.AuthScreen
 import com.prafull.notesapp.auth.ui.AuthViewModel
 import com.prafull.notesapp.auth.ui.LoginScreen
 import com.prafull.notesapp.auth.ui.SignUpScreen
 import com.prafull.notesapp.main.ui.screens.createNote.CreateNoteScreen
+import com.prafull.notesapp.main.ui.screens.editNoteScreen.EditNoteScreen
+import com.prafull.notesapp.main.ui.screens.editNoteScreen.EditNoteViewModel
 import com.prafull.notesapp.main.ui.screens.home.HomeScreen
 import com.prafull.notesapp.main.ui.theme.NotesAppTheme
 import org.koin.androidx.compose.getViewModel
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,6 +68,13 @@ fun NavGraphBuilder.homeNavigation(navController: NavController) {
         }
         composable<HomeRoutes.NewNoteScreen> {
             CreateNoteScreen(viewModel = getViewModel(), navController = navController)
+        }
+        composable<HomeRoutes.EditNoteScreen> {
+            val data: HomeRoutes.EditNoteScreen = it.toRoute()
+            val viewModel: EditNoteViewModel = getViewModel {
+                parametersOf(data.toNoteItem())
+            }
+            EditNoteScreen(viewModel, navController)
         }
     }
 }
