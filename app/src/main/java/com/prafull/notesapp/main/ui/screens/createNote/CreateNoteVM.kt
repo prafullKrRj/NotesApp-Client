@@ -22,10 +22,12 @@ class CreateNoteVM(
         context.getSharedPreferences("notes_pref", Context.MODE_PRIVATE).getString("token", "")
             ?: ""
     private val repo by inject<NotesRepository>()
+
     var note by mutableStateOf(CreateNoteItem("", ""))
 
     fun saveNote() {
         viewModelScope.launch {
+            Log.d("CreateNoteVM", "saveNote: $note")
             repo.createNote(token, note).collectLatest {
                 Log.d("CreateNoteVM", "saveNote: $it")
             }
