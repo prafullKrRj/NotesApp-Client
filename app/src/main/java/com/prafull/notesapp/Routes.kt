@@ -1,6 +1,5 @@
 package com.prafull.notesapp
 
-import com.google.gson.annotations.SerializedName
 import com.prafull.notesapp.main.domain.models.NoteItem
 import kotlinx.serialization.Serializable
 

@@ -11,4 +11,8 @@ interface NotesRepository {
     suspend fun createNote(token: String, note: CreateNoteItem): Flow<BaseClass<List<NoteItem>>>
     suspend fun updateNote(token: String, note: NoteItem): Flow<BaseClass<List<NoteItem>>>
     suspend fun getNoteById(token: String, noteId: String): Flow<BaseClass<NoteItem>>
+    suspend fun deleteManyNotes(
+        token: String,
+        noteIds: List<String>
+    ): Flow<BaseClass<List<NoteItem>>>
 }

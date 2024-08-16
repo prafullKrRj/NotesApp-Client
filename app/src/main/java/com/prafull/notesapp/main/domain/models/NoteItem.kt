@@ -19,5 +19,6 @@ data class NoteItem(
     @SerializedName("user")
     val user: String
 ) {
-    fun toEditNoteRoute() = HomeRoutes.EditNoteScreen(__v, _id, content, createdAt, title, updatedAt, user)
+    fun toEditNoteRoute() =
+        HomeRoutes.EditNoteScreen(__v, _id, content, createdAt, title, updatedAt, user)
 }

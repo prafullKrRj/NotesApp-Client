@@ -62,21 +62,9 @@ class HomeViewModel(
     }
 
     fun getAllNotes() {
+        _uiState.update { BaseClass.Loading }
         viewModelScope.launch {
             repo.getAllNotes("Bearer ${pref.getString("token", "")}").collect { resp ->
-                _uiState.update {
-                    resp
-                }
-                if (resp is BaseClass.Success) {
-                    notes = resp.data
-                }
-            }
-        }
-    }
-
-    fun deleteNoteById(noteId: String) {
-        viewModelScope.launch {
-            repo.deleteNote("Bearer ${pref.getString("token", "")}", noteId).collect { resp ->
                 _uiState.update {
                     resp
                 }
@@ -114,15 +102,19 @@ class HomeViewModel(
     }
 
     fun deleteSelectedNotes() {
+        notes = notes.filterNot { _selectedNotes.value.contains(it) }
         _uiState.update {
             BaseClass.Loading
         }
         viewModelScope.launch {
             val selectedNotes = _selectedNotes.value
-            selectedNotes.forEach {
-                deleteNoteById(it._id)
+            val noteIds = selectedNotes.map { it._id }
+            clearSelectedNotes()
+            repo.deleteManyNotes("Bearer ${pref.getString("token", "")}", noteIds).collect { resp ->
+                _uiState.update {
+                    resp
+                }
             }
-            _selectedNotes.update { emptySet() }
         }
     }
 

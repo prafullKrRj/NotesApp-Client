@@ -1,5 +1,6 @@
 package com.prafull.notesapp.main.data
 
+import android.util.Log
 import com.prafull.notesapp.main.domain.models.CreateNoteItem
 import com.prafull.notesapp.main.domain.models.NoteItem
 import com.prafull.notesapp.main.domain.repos.NotesRepository
@@ -110,4 +111,27 @@ class NotesRepositoryImpl(
         }
     }
 
+    override suspend fun deleteManyNotes(
+        token: String,
+        noteIds: List<String>
+    ): Flow<BaseClass<List<NoteItem>>> {
+        return callbackFlow {
+            try {
+                Log.d("NotesRepositoryImpl", "deleteManyNotes: $noteIds")
+                val response = apiService.deleteManyNotes(token, DeleteNoteBody(noteIds))
+                Log.d("NotesRepositoryImpl", "deleteManyNotes: ${response}")
+                if (response.isSuccessful) {
+                    Log.d("NotesRepositoryImpl", "deleteManyNotes: ${response.body()}")
+                    response.body()?.let {
+                        trySend(BaseClass.Success(it.toList()))
+                    } ?: trySend(BaseClass.Error("Error deleting notes"))
+                } else {
+                    trySend(BaseClass.Error("Error deleting notes"))
+                }
+            } catch (e: Exception) {
+                trySend(BaseClass.Error("Error deleting notes"))
+            }
+            awaitClose { }
+        }
+    }
 }

@@ -25,6 +25,7 @@ class EditNoteViewModel(
     fun updateNote() {
 
     }
+
     fun deleteNote() {
         viewModelScope.launch(Dispatchers.IO) {
 

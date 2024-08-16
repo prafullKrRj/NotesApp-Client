@@ -45,7 +45,7 @@ fun NoteCard(
                     if (isSelecting) {
                         onNoteToggled()
                     } else {
-                        // TODO: Navigate to note details screen
+                        navController.navigate(note.toEditNoteRoute())
                     }
                 },
                 onLongClick = {

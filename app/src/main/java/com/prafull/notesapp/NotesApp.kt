@@ -7,6 +7,7 @@ import com.prafull.notesapp.main.data.ApiService
 import com.prafull.notesapp.main.data.NotesRepositoryImpl
 import com.prafull.notesapp.main.domain.repos.NotesRepository
 import com.prafull.notesapp.main.ui.screens.createNote.CreateNoteVM
+import com.prafull.notesapp.main.ui.screens.editNoteScreen.EditNoteViewModel
 import com.prafull.notesapp.main.ui.screens.home.HomeViewModel
 import com.prafull.notesapp.managers.SharedPrefManager
 import org.koin.android.ext.koin.androidContext
@@ -48,6 +49,7 @@ class NotesApp : Application() {
                     }
                     viewModel { HomeViewModel(get(), get()) }
                     viewModel { CreateNoteVM(get()) }
+                    viewModel { EditNoteViewModel(get(), get()) }
                 }
             )
         }

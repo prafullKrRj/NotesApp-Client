@@ -1,10 +1,13 @@
 package com.prafull.notesapp.main.data
 
+import com.google.gson.annotations.SerializedName
 import com.prafull.notesapp.main.domain.models.CreateNoteItem
+import com.prafull.notesapp.main.domain.models.DeleteNote
 import com.prafull.notesapp.main.domain.models.NoteItem
 import com.prafull.notesapp.main.domain.models.Notes
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
@@ -40,4 +43,15 @@ interface ApiService {
         @Header("Authorization") token: String,
         @Path("noteId") noteId: String
     ): Response<NoteItem>
+
+    @POST("/api/notes/deleteMany")
+    suspend fun deleteManyNotes(
+        @Header("Authorization") token: String,
+        @Body noteIds: DeleteNoteBody
+    ): Response<Notes>
 }
+
+data class DeleteNoteBody(
+    @SerializedName("ids")
+    val ids: List<String>
+)
