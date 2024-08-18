@@ -4,6 +4,10 @@
 
 **NotesApp** is a secure and user-friendly Android application for managing your notes. Built with modern technologies, it ensures the privacy of your notes by encrypting them and storing them securely in MongoDB. The backend is powered by Express.js, while the frontend leverages Jetpack Compose for a seamless user experience.
 
+## 📃 Documentation
+
+You can find the documentation [here](https://notesapp-v4w2.onrender.com)
+
 ## ✨ Features
 
 - **🔒 Secure Notes:** Your notes are stored in encrypted form in MongoDB.
