@@ -18,6 +18,10 @@ This application is hosted on Render. **Note:** The instance is free so will spi
 
 The backend code for this application is available in a separate repository. You can find it [here](https://github.com/prafullKrRj/NotesApp).
 
+## 🐞 Known Issues
+
+There are some errors currently present in the app. These issues are being worked on and will be fixed in future updates.
+
 ## 🛠 Dependencies
 
 - **🖌 [Jetpack Compose](https://developer.android.com/jetpack/compose):** For building the UI in a declarative manner.
