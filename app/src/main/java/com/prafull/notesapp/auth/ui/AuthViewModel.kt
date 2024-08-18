@@ -20,6 +20,7 @@ class AuthViewModel(
     private val prefs = context.getSharedPreferences("notes_pref", Context.MODE_PRIVATE)
     var clicked by mutableStateOf(false)
     var hasLoggedIn by mutableStateOf(false)
+
     fun login(email: String, password: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val response = apiService.login(
@@ -28,6 +29,9 @@ class AuthViewModel(
             if (response.isSuccessful) {
                 response.body()?.let {
                     hasLoggedIn = true
+                    prefs.edit().putString("email", it.user.email).apply()
+                    prefs.edit().putString("password", it.user.password).apply()
+                    prefs.edit().putString("name", it.user.name).apply()
                     prefs.edit().putString("token", it.token).apply()
                     prefs.edit().putBoolean("isLoggedIn", true).apply()
                 }

@@ -74,14 +74,19 @@ class NotesRepositoryImpl(
 
     override suspend fun updateNote(
         token: String,
-        note: NoteItem
-    ): Flow<BaseClass<List<NoteItem>>> {
+        note: UpdateNoteItem
+    ): Flow<BaseClass<NoteItem>> {
         return callbackFlow {
             try {
-                val response = apiService.updateNote(token, note)
+                val response = apiService.updateNote(
+                    token = token,
+                    note = note
+                )
+                Log.d("NotesRepositoryImpl", "updateNote: $note")
+                Log.d("NotesRepositoryImpl", "updateNote: $response")
                 if (response.isSuccessful) {
                     response.body()?.let {
-                        trySend(BaseClass.Success(it.toList()))
+                        trySend(BaseClass.Success(it))
                     } ?: trySend(BaseClass.Error("Error updating note"))
                 } else {
                     trySend(BaseClass.Error("Error updating note"))

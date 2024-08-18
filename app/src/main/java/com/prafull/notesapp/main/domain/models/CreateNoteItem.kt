@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class CreateNoteItem(
     @SerializedName("title")
-    val title: String,
+    val title: String = "",
     @SerializedName("content")
-    val content: String
+    val content: String = ""
 )

@@ -1,22 +1,20 @@
 package com.prafull.notesapp.main.ui.screens.createNote
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,6 +35,7 @@ import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.OutlinedRichTextEditor
 import com.mohamedrejeb.richeditor.ui.material3.RichTextEditorDefaults
 import com.prafull.notesapp.R
+import com.prafull.notesapp.goBackStack
 import com.prafull.notesapp.main.domain.models.CreateNoteItem
 
 enum class StyleType(val icon: Int, val style: Any) {
@@ -76,63 +75,73 @@ fun CreateNoteScreen(viewModel: CreateNoteVM, navController: NavController) {
     val contentState = rememberRichTextState()
     var selectedStyles by remember { mutableStateOf(setOf<StyleType>()) }
 
-    LaunchedEffect(titleState.toMarkdown().length, contentState.toMarkdown().length) {
-        viewModel.note = CreateNoteItem(titleState.toMarkdown(), contentState.toMarkdown())
-    }
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        if (titleState.toMarkdown().isNotEmpty() || contentState.toMarkdown().isNotEmpty()) {
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                TextButton(onClick = {
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(title = {
+                Text("Create Note")
+            }, actions = {
+                IconButton(onClick = {
+                    viewModel.note =
+                        CreateNoteItem(titleState.toMarkdown(), contentState.toMarkdown())
                     viewModel.saveNote()
-                    navController.popBackStack()
+                    navController.goBackStack()
                 }) {
-                    Text(text = "Save")
+                    Icon(
+                        painter = painterResource(id = R.drawable.baseline_save_24),
+                        contentDescription = "Save"
+                    )
                 }
-            }
+            })
         }
-        OutlinedRichTextEditor(
-            state = titleState,
-            modifier = Modifier.fillMaxWidth(),
-            colors = RichTextEditorDefaults.outlinedRichTextEditorColors(
-                focusedBorderColor = Color.Transparent,
-                unfocusedBorderColor = Color.Transparent
-            ),
-            placeholder = { Text("Title...") },
-            singleLine = true,
-            textStyle = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.SemiBold)
-        )
+    ) { paddingValues ->
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+        ) {
+            item {
 
-        LazyRow(modifier = Modifier.fillMaxWidth()) {
-            items(StyleType.entries.toTypedArray()) { style ->
-                EditableButton(
-                    style = style,
-                    onClick = {
-                        selectedStyles = selectedStyles.toMutableSet().apply {
-                            if (contains(style)) remove(style) else add(style)
-                        }
-                        when (style.style) {
-                            is SpanStyle -> contentState.toggleSpanStyle(style.style)
-                            is ParagraphStyle -> contentState.toggleParagraphStyle(style.style)
-                        }
-                    },
-                    selected = style in selectedStyles
+                OutlinedRichTextEditor(
+                    state = titleState,
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = RichTextEditorDefaults.outlinedRichTextEditorColors(
+                        focusedBorderColor = Color.Transparent,
+                        unfocusedBorderColor = Color.Transparent
+                    ),
+                    placeholder = { Text("Title...") },
+                    singleLine = true,
+                    textStyle = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.SemiBold)
+                )
+
+                LazyRow(modifier = Modifier.fillMaxWidth()) {
+                    items(StyleType.entries.toTypedArray()) { style ->
+                        EditableButton(
+                            style = style,
+                            onClick = {
+                                selectedStyles = selectedStyles.toMutableSet().apply {
+                                    if (contains(style)) remove(style) else add(style)
+                                }
+                                when (style.style) {
+                                    is SpanStyle -> contentState.toggleSpanStyle(style.style)
+                                    is ParagraphStyle -> contentState.toggleParagraphStyle(style.style)
+                                }
+                            },
+                            selected = style in selectedStyles
+                        )
+                    }
+                }
+
+                OutlinedRichTextEditor(
+                    state = contentState,
+                    modifier = Modifier.fillMaxSize(),
+                    colors = RichTextEditorDefaults.outlinedRichTextEditorColors(
+                        focusedBorderColor = Color.Transparent,
+                        unfocusedBorderColor = Color.Transparent
+                    ),
+                    placeholder = { Text("Content...") }
                 )
             }
         }
-
-        OutlinedRichTextEditor(
-            state = contentState,
-            modifier = Modifier.fillMaxSize(),
-            colors = RichTextEditorDefaults.outlinedRichTextEditorColors(
-                focusedBorderColor = Color.Transparent,
-                unfocusedBorderColor = Color.Transparent
-            ),
-            placeholder = { Text("Content...") }
-        )
     }
 }
 

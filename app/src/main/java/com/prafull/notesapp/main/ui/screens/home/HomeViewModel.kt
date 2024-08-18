@@ -88,18 +88,6 @@ class HomeViewModel(
         }
     }
 
-    fun updateNote(noteItem: NoteItem) {
-        viewModelScope.launch {
-            repo.updateNote("Bearer ${pref.getString("token", "")}", noteItem).collect { resp ->
-                _uiState.update {
-                    resp
-                }
-                if (resp is BaseClass.Success) {
-                    notes = resp.data
-                }
-            }
-        }
-    }
 
     fun deleteSelectedNotes() {
         notes = notes.filterNot { _selectedNotes.value.contains(it) }

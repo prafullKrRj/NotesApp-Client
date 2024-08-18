@@ -27,6 +27,9 @@ sealed interface HomeRoutes {
     data object HomeScreen : HomeRoutes
 
     @Serializable
+    data object ProfileScreen : HomeRoutes
+
+    @Serializable
     data object NewNoteScreen : HomeRoutes
 
     @Serializable

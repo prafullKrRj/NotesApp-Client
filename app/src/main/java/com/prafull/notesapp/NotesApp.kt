@@ -1,6 +1,7 @@
 package com.prafull.notesapp
 
 import android.app.Application
+import com.google.gson.GsonBuilder
 import com.prafull.notesapp.auth.data.AuthApiService
 import com.prafull.notesapp.auth.ui.AuthViewModel
 import com.prafull.notesapp.main.data.ApiService
@@ -9,7 +10,9 @@ import com.prafull.notesapp.main.domain.repos.NotesRepository
 import com.prafull.notesapp.main.ui.screens.createNote.CreateNoteVM
 import com.prafull.notesapp.main.ui.screens.editNoteScreen.EditNoteViewModel
 import com.prafull.notesapp.main.ui.screens.home.HomeViewModel
+import com.prafull.notesapp.main.ui.screens.profilescreen.ProfileViewModel
 import com.prafull.notesapp.managers.SharedPrefManager
+import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
@@ -44,12 +47,18 @@ class NotesApp : Application() {
                     }
                     single<ApiService> {
                         Retrofit.Builder().baseUrl(baseUrl)
-                            .addConverterFactory(GsonConverterFactory.create()).build()
+                            .client(OkHttpClient.Builder().build())
+                            .addConverterFactory(
+                                GsonConverterFactory.create(
+                                    GsonBuilder().setLenient().create()
+                                )
+                            ).build()
                             .create(ApiService::class.java)
                     }
                     viewModel { HomeViewModel(get(), get()) }
                     viewModel { CreateNoteVM(get()) }
                     viewModel { EditNoteViewModel(get(), get()) }
+                    viewModel { ProfileViewModel(get()) }
                 }
             )
         }

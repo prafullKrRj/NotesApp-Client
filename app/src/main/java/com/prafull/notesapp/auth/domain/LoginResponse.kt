@@ -2,7 +2,9 @@ package com.prafull.notesapp.auth.domain
 
 import com.google.gson.annotations.SerializedName
 
-data class Token(
+data class LoginResponse(
     @SerializedName("token")
-    val token: String
+    val token: String,
+    @SerializedName("user")
+    val user: UserResponse
 )

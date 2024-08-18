@@ -4,6 +4,7 @@ package com.prafull.notesapp.main.ui.screens.home
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,6 +19,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -85,8 +87,23 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel) {
             })
         } else {
             CenterAlignedTopAppBar(title = {
-                SearchBar(viewModel = viewModel, searchQuery = searchQuery) {
-                    searchQuery = it
+                Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                    SearchBar(
+                        modifier = Modifier.weight(.85f),
+                        viewModel = viewModel,
+                        searchQuery = searchQuery
+                    ) {
+                        searchQuery = it
+                    }
+                    IconButton(onClick = {
+                        navController.navigate(HomeRoutes.ProfileScreen)
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.Person,
+                            contentDescription = "navigate to profile",
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
                 }
             })
         }
@@ -132,7 +149,10 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SearchBar(
-    viewModel: HomeViewModel, searchQuery: String, onSearchQueryChange: (String) -> Unit
+    modifier: Modifier,
+    viewModel: HomeViewModel,
+    searchQuery: String,
+    onSearchQueryChange: (String) -> Unit
 ) {
     OutlinedTextField(
         value = searchQuery,
@@ -140,7 +160,7 @@ private fun SearchBar(
             onSearchQueryChange(it)
             viewModel.filterNotes(it)
         },
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp)
             .height(56.dp),

@@ -5,7 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
@@ -25,6 +24,7 @@ import com.prafull.notesapp.main.ui.screens.createNote.CreateNoteScreen
 import com.prafull.notesapp.main.ui.screens.editNoteScreen.EditNoteScreen
 import com.prafull.notesapp.main.ui.screens.editNoteScreen.EditNoteViewModel
 import com.prafull.notesapp.main.ui.screens.home.HomeScreen
+import com.prafull.notesapp.main.ui.screens.profilescreen.ProfileScreen
 import com.prafull.notesapp.main.ui.theme.NotesAppTheme
 import org.koin.androidx.compose.getViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -39,16 +39,13 @@ class MainActivity : ComponentActivity() {
                 val mainNavController = rememberNavController()
                 val pref = getSharedPreferences("notes_pref", MODE_PRIVATE)
                 Scaffold(
-                    Modifier
-                        .imePadding()
-                        .fillMaxSize()
+                    Modifier.fillMaxSize()
                 ) { innerPadding ->
                     NavHost(
                         modifier = Modifier.padding(innerPadding),
                         navController = mainNavController,
                         startDestination = if (pref.getBoolean(
-                                "isLoggedIn",
-                                false
+                                "isLoggedIn", false
                             )
                         ) MajorRoutes.HomeScreen else MajorRoutes.AuthScreen
                     ) {
@@ -75,6 +72,9 @@ fun NavGraphBuilder.homeNavigation(navController: NavController) {
                 parametersOf(data.toNoteItem())
             }
             EditNoteScreen(viewModel, navController)
+        }
+        composable<HomeRoutes.ProfileScreen> {
+            ProfileScreen(navController = navController, getViewModel())
         }
     }
 }

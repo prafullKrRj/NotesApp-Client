@@ -9,11 +9,11 @@ data class NoteItem(
     @SerializedName("_id")
     val _id: String,
     @SerializedName("content")
-    val content: String,
+    var content: String,
     @SerializedName("createdAt")
     val createdAt: String,
     @SerializedName("title")
-    val title: String,
+    var title: String,
     @SerializedName("updatedAt")
     val updatedAt: String,
     @SerializedName("user")

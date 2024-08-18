@@ -1,6 +1,6 @@
 package com.prafull.notesapp.auth.data
 
-import com.prafull.notesapp.auth.domain.Token
+import com.prafull.notesapp.auth.domain.LoginResponse
 import com.prafull.notesapp.auth.domain.User
 import com.prafull.notesapp.auth.domain.UserResponse
 import retrofit2.Response
@@ -12,7 +12,7 @@ interface AuthApiService {
     @POST("/api/auth/login")
     suspend fun login(
         @Body user: User
-    ): Response<Token>
+    ): Response<LoginResponse>
 
     @POST("/api/auth/register")
     suspend fun register(

@@ -2,7 +2,6 @@ package com.prafull.notesapp.main.data
 
 import com.google.gson.annotations.SerializedName
 import com.prafull.notesapp.main.domain.models.CreateNoteItem
-import com.prafull.notesapp.main.domain.models.DeleteNote
 import com.prafull.notesapp.main.domain.models.NoteItem
 import com.prafull.notesapp.main.domain.models.Notes
 import retrofit2.Response
@@ -11,6 +10,7 @@ import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface ApiService {
@@ -26,11 +26,11 @@ interface ApiService {
         @Body note: CreateNoteItem
     ): Response<Notes>
 
-    @POST("/api/notes/update")
+    @PUT("/api/notes/update/")
     suspend fun updateNote(
         @Header("Authorization") token: String,
-        @Body note: NoteItem
-    ): Response<Notes>
+        @Body note: UpdateNoteItem
+    ): Response<NoteItem>
 
     @POST("/api/notes/delete/{noteId}")
     suspend fun deleteNote(
@@ -49,9 +49,27 @@ interface ApiService {
         @Header("Authorization") token: String,
         @Body noteIds: DeleteNoteBody
     ): Response<Notes>
+
+    @DELETE("/api/auth/deleteProfile")
+    suspend fun deleteProfile(
+        @Header("Authorization") token: String
+    ): Response<DeleteProfileResponse>
 }
+
+data class DeleteProfileResponse(
+    val message: String
+)
 
 data class DeleteNoteBody(
     @SerializedName("ids")
     val ids: List<String>
+)
+
+data class UpdateNoteItem(
+    @SerializedName("title")
+    val title: String,
+    @SerializedName("content")
+    val content: String,
+    @SerializedName("id")
+    val id: String
 )
