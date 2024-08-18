@@ -70,18 +70,18 @@ fun NoteCard(
                     fontSize = 16.sp,
                     color = Color.DarkGray
                 )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = "Created: ${note.createdAt}",
-                    fontSize = 12.sp,
-                    color = Color.Gray
-                )
-                Text(
-                    text = "Last Updated: ${note.updatedAt}",
-                    fontSize = 12.sp,
-                    color = Color.Gray
-                )
-
+                /*  Spacer(modifier = Modifier.height(8.dp))
+                  Text(
+                      text = "Created: ${note.createdAt}",
+                      fontSize = 12.sp,
+                      color = Color.Gray
+                  )
+                  Text(
+                      text = "Last Updated: ${note.updatedAt}",
+                      fontSize = 12.sp,
+                      color = Color.Gray
+                  )
+  */
             }
             if (isSelecting) {
                 Checkbox(modifier = Modifier.weight(.2f), checked = selected, onCheckedChange = {

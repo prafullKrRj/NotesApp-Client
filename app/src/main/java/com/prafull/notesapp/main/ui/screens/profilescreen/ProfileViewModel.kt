@@ -37,8 +37,8 @@ class ProfileViewModel(
             val response = apiService.deleteProfile(token)
             if (response.isSuccessful) {
                 Log.d("ProfileViewModel", "deleteAccount: ${response.body()}")
-                clearPrefs()
             }
+            clearPrefs()
         }
     }
 

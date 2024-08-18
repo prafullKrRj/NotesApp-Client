@@ -20,7 +20,9 @@ android {
             useSupportLibrary = true
         }
     }
-
+    buildFeatures {
+        buildConfig = true
+    }
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -86,4 +88,5 @@ dependencies {
     implementation(libs.richeditor.compose)
 
     implementation(libs.commonmark)
+    implementation(libs.aescrypt)
 }
