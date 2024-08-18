@@ -14,6 +14,10 @@
 
 This application is hosted on Render. **Note:** The instance is free so will spin down with inactivity, which can delay requests by 50 seconds or more.
 
+## 🗃️ Backend Repository
+
+The backend code for this application is available in a separate repository. You can find it [here](https://github.com/prafullKrRj/NotesApp).
+
 ## 🛠 Dependencies
 
 - **🖌 [Jetpack Compose](https://developer.android.com/jetpack/compose):** For building the UI in a declarative manner.
